@@ -153,7 +153,7 @@ performance
 *Saiba mais:*
 >live [#179](https://www.youtube.com/watch?v=ZOSWdktsKf0) Gerênciando pacotes e ambientes com Poetry \
 >live [#192](https://www.youtube.com/watch?v=O3bs4JtHrow) Como organizar um projeto python? \
->live [#162](https://www.youtube.com/watch?v=cEkA9PH2oEk) Sua aplicação NÃO está segura
+>live [#163](https://www.youtube.com/watch?v=cEkA9PH2oEk) Sua aplicação NÃO está segura
 
 *Estamos em fase de transição do empacotamento / gerenciamento de ambientes.
 O requirements.txt + requirements_dev.txt + setup.py serão subsistidos pelo **pyproject.toml***
