@@ -1,0 +1,8 @@
+# instala as blibiotecas de produção
+-r requirements.txt
+
+# Bibliotecas de desenvolvimento
+black
+ipdb
+ipython
+pytest
