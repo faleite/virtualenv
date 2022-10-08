@@ -1,5 +1,28 @@
 # Ambientes virtuais e instalação de bibliotecas
 
+#### VENV - Ambiente Virtual
+**Uma ferramenta para "hackear" o site-packages.**
+- Cria um ambiente "local"
+- Isolado do "Global"
+- Vem embutido no Python
+
+Comando| Função
+-------|-------
+**python -m venv <nome_do_ambiente>**| *Criar um ambiente Virtual*
+**source <venv>/bin/activate**| *Ativar o ambiente Virtual (Unix)*
+**deactivate**| *Desativar o ambiente virtual*
+
+
+Fragmentos da Função|Comando
+---|---
+*Pedir para o python executar um módulo*| **-m**
+*Módulo Virtual Env*| **venv**
+
+*venv é uma biblioteca do python (venv é uma biblioteca parcial do virtualenv)
+virtualenv é biblioteca completa e externa ao python, para instalar:* ``$ pip install virtualenv``
+
+---
+
 #### PIP - Pip Install Package.
 **É uma maneira de instalar pacotes externos (3-party) no nosso ambiente.**
 
@@ -7,10 +30,13 @@ Comando|Função
 -------|------
 **pip isntall pylint**| *Instalar a biblioteca pylint*
 **pip show pylint**| *Mostra informações sobre a biblioteca e quais bibliotecas ela depende*
-*Listar bibliotecas instaladas frizando sua versões*| **pip freeze**
-*Desinstalar biblioteca*| **pip uninstall pandas**
-*Listar bibliotecas instaladas*| **pip list**
-*Atualizar pip ou outra biblioteca*| **pip install --upgrade pip**
+**pip freeze**| *Listar bibliotecas instaladas frizando sua versões*
+**pip uninstall pandas**| *Desinstalar biblioteca*
+**pip list**| *Listar bibliotecas instaladas*
+**pip install --upgrade pip**| *Atualizar pip ou outra biblioteca*
+**pip list -o**| *Listar bibliotecas mostrando se estão atualizadas*
+**pip install --upgrade <pacote\>**| Atualizar biblioteca
+
 
 Exemplo:
 ```sh
@@ -28,65 +54,59 @@ Required-by:
 ```
 ---
 
-#### VENV - Ambiente Virtual
-**Uma ferramenta para "hackear" o site-packages.**
-- Cria um ambiente "local"
-- Isolado do "Global"
-- Vem embutido no Python
-
-Função|Comando
-------|-------
-*Criar um ambiente Virtual*| **python -m venv <nome_do_ambiente>**
-*Ativar o ambiente Virtual (Unix)*| **source <venv>/bin/activate**
-*Desativar o ambiente virtual*| **deactivate**
-
-
-Fragmentos da Função|Comando
----|---
-*Pedir para o python executar um módulo*| **-m**
-*Módulo Virtual Env*| **venv**
-
-*venv é uma biblioteca do python (venv é uma biblioteca parcial do virtualenv)
-virtualenv é biblioteca completa e externa ao python (para instalar: $ pip install virtualenv)*
-
----
-
 #### requirements.txt - Arquivos de dependêcias do projeto
 
 *Exemplo de arquivo requirements.txt*
 ```sh
 # requirements.txt
 
-# pacotes que quero instalar
+# pacotes que quero instalar na ultima verção
 httpx
 pandas
 pytest
 
 # pacotes com versões específicas
+flake8 > 1.0.0 # Versões maiores que 1.0.0
+pylint < 2.0.0 # Versões menores que 2.0.0
+fastapi <= 3.0.0 # Versões menores ou iguais a 3.0.0
 black == 0.6.1 # igual a 0.6.1
-django >= 4.1.1 # maior que 4.1.1
+django >= 4.1.1 # maiores ou iguais a 4.1.1
 flask != 3.5 # diferente de 3.5
-selenium ~= 1.1 # maior ou igual a 1.1, mas menor que 2
-```
-*Documentaçao do [requirements.txt](hhttps://pip.pypa.io/en/stable/reference/requirements-file-format/)*
+selenium ~= 1.0.1 # maior ou igual a 1.0.1, mas menor que 1.1.0
+matlab ~= 1.1 # maior ou igual a 1.0, mas menor que 2.0
+doctest == 1.1.* # maior verção do patch 1.1.0, 1.1.1, 1.1.2 -> pega a 1.1.2
 
-Para instalar as bibliotecas seguindo a padronização do requirements:
-```sh
-$ pip install -r requirements.txt
+# Alternativa com combinados
+pacote >= 3.0, <4.0
+pacote >= 3.0, <=4.0
 ```
 
+*Pode criar o requirements.txt com pip freeze:*
+
+``$ pip freeze > requirements.txt``
+
+*Instalar as bibliotecas seguindo a padronização do requirements:*
+
+``$ pip install -r requirements.txt``
+
+*Documentaçao do [requirements.txt](hhttps://pip.pypa.io/en/stable/reference/requirements-file-format/)*\
 *Bibliotecas externas do python [pypi](https://pypi.org)*
-*Recomendações de bibliotecas:* **pip-autoremove, pipdeptree**
+
+*Recomendações de bibliotecas:* **pip-autoremove e pipdeptree**
 
 Função|Comando
 ------|-------
-*Remove a biblioteca e suas bibliotecas dependentes| **pip-autoremove pandas**
-*Lista o que cada biblioteca instalou*| **pip install pipdeptree**
+**pip-autoremove pandas**| *Remove a biblioteca e suas bibliotecas dependentes*
+**pip install pipdeptree**| *Lista o que cada biblioteca instalou*
 
-**Nem todas as bibliotecas vão para o ambiente de produção, para isso utilizamos outros arquivos de
-requirements para separar os ambientes.**
 
-*Exemplo* **Ambiente de Dev com o requirements_dev.txt**
+**Nem todas as bibliotecas vão para o ambiente de produção.**\
+**Para isso utilizamos outros arquivos de requirements para separar os ambientes.**
+
+#### Ambiente de Dev com o requirements_dev.txt
+
+*Exemplo:*
+
 ```sh
 # requirements_dev.txt
 
@@ -97,8 +117,6 @@ ipdb # debugger
 ipython # shell interativo
 black # formatador de código
 ```
-
----
 
 #### constraints.txt "Arquivo de restrições"
 
@@ -112,7 +130,38 @@ Função|Comando
 *Uso no ambiente de desenvolvimento*| pip install -r requirements_dev.txt -c constraints.txt
 *Uso no ambiente de produção*| pip install -r requirements.txt -c constraints.txt
 
+---
+#### Ferramentas para controle de atualizações dependêcias
+---
+
+*Existem frentes diferentes e regras diferentes em cada projeto/empresa:*
+
+- pre-commit: Cria um script no git (pasta hook) que informa atualizações antes de commitar
+- Integração contínua
+- pip-upgrader: pacote  a ser instalado com o pip
+- [pyup](https://www.pyup.io): segurança de dependências
+
+---
+#### Safety - Ferramenta para validação de vulnerabilidades
+---
+
+Comando|Função
+-------|------
+**pip install safety**| *Instala o pacote para checar vulnerabilidades*
+**safety check**| *Verifica e lista as vulnerabilidades dos pacotes instalados*
+**safety check -r requirements.txt --full-report**|
+
+*Este processo pode ser automatizado com:*
+
+- pre-commit
+- Integração contínua
+- dependa-bot (github)
+- pipenv check
+
+
+---
 #### Outras ferramentas
+___
 
 *Amigos do pip:*
 - **pip-autoremove**: Remove do ambiente as bibliotecas dependentes
